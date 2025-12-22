@@ -1,0 +1,279 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage{xeCJK}
+\usepackage{eqnarray,amsmath,amssymb}
+\usepackage{amsmath}
+\usepackage{enumerate}
+\usepackage{xcolor}
+\usepackage{graphicx,float,subfigure,lipsum,tkz-euclide}
+\setCJKmainfont{標楷體}
+
+\begin{document}
+Chapter8 Polynomial Interpolation\\
+~\\
+5. Prove that 
+\begin{equation*}
+(n-1)！h^{n-1}| (x-x_{n-1})(x-x_n) |  \leq | \omega_{n+1}(x) |\leq n!h^{n-1}| (x-x_{n-1})(x-x_n) |,
+\end{equation*}
+where $n$ is even, $-1=x_0 < x_1 < \cdots < x_{n-1} < x_n =1,~ x\in (x_{n-1},x_n)$ and $h=\frac{2}{n}$.
+[Hint：let $N = n/2$ and show first that
+\begin{equation*}
+\begin{aligned}
+\omega_{n+1}(x) = &(x+Nh)(x+(N-1)h)\cdots(x+h)x\\
+&(x-h)\cdots(x-(N-1)h)(x-h)
+\end{aligned}\tag{8.74}
+\end{equation*}
+Then, take $x = rh$ with $N − 1 < r < N$.] \\
+~\\
+$\Rightarrow$Suppose  $n$ is even and the nodes $x_j$ are equally spaced over $[-1, 1]$ with $h = 2/n$, we define the nodes $x_j = -1 + jh, \quad j = 0, 1, \dots, n$. \\
+Since $n$ is even, let $N = n/2$ which implies $x_N = 0$. We can rewrite the nodes relative to the midpoint
+$$x_j = (j - N)h$$
+The nodal polynomial is defined as
+$$ \omega_{n+1}(x) = \prod_{j=0}^n (x - x_j) = (x - x_0)(x - x_1) \cdots (x - x_n)$$
+Since we have $x_j = (j-N)h$, and letting $k = j-N$, then
+$$\omega_{n+1}(x) = (x+Nh)(x+(N-1)h)\cdots(x+h)x(x-h)\cdots(x-(N-1)h)(x-Nh).$$
+If $x \in (x_{n-1}, x_n)$, then isolate the terms involving $x_{n-1}$ and $x_n$
+$$|\omega_{n+1}(x)| = \left| \prod_{j=0}^{n-2} (x - x_j) \right| \cdot |(x - x_{n-1})(x - x_n)|$$
+Let $P(x) = \prod_{j=0}^{n-2} (x - x_j)$. Our goal is to show that $$(n-1)! h^{n-1} \leq P(x) \leq n! h^{n-1}$$
+Consider $x = rh$. Since $x \in (x_{n-1}, x_n)$ and $x_n = 1 = Nh$, we have $$(N-1)h < rh < Nh \implies N-1 < r < N$$
+Then $$P(rh) = \prod_{j=0}^{n-2} (rh - (j-N)h) = h^{n-1} \prod_{j=0}^{n-2} (r - (j-N)).$$
+%把給定的條件置換
+Let $k = j-N$. As $j$ goes from $0$ to $n-2$, $k$ goes from $-N$ to $N-2$ $$\Rightarrow P(rh) = h^{n-1} \underbrace{(r+N)(r+N-1)\cdots(r-(N-2))}_{f(r)}$$
+Since $r \in (N-1, N)$, all factors in $f(r)$ are positive. Furthermore, $f(r)$ is a strictly increasing function of $r$ because each factor increases as $r$ increases.
+\begin{itemize}
+  \item If $r \to N-1$：$$f(r) > (N-1+N)(N-1+N-1)\cdots(N-1-(N-2))$$$$f(r) > (2N-1)(2N-2)\cdots(1) = (n-1)!$$Then, $P(x) \geq (n-1)! h^{n-1}$
+  \item If $r \to N$ $$f(r) < (N+N)(N+N-1)\cdots(N-(N-2))$$$$f(r) < (2N)(2N-1)\cdots(2) = n!$$Then, $P(x) \leq n! h^{n-1}$
+\end{itemize}
+Thus $$(n-1)! h^{n-1} \leq \left| \prod_{j=0}^{n-2} (x - x_j) \right| \leq n! h^{n-1}$$
+Hence we obtain
+$$ (n-1)! h^{n-1} |(x - x_{n-1})(x - x_n)| \leq |\omega_{n+1}(x)| \leq n! h^{n-1} |(x - x_{n-1})(x - x_n)|$$
+~\\
+
+\newpage
+6. Under the assumptions of Exercise 5, show that$ |\omega_{n+1}|$ is maximum if $x\in (x_{n−1}, x_n)$ (notice that$ |\omega_{n+1}|$ is an even function).
+[Hint   use (8.74) to prove that $|\omega_{n+1}(x+h)/\omega_{n+1}(x)| > 1$ for any $x \in (0, x_{n−1})$
+with $x$ not coinciding with any interpolation node.] \\
+~\\
+$\Rightarrow$
+Since the set of nodes is symmetric, we have $$\omega_{n+1}(-x) = \prod_{j=0}^n (-x - x_j) = (-1)^{n+1} \prod_{j=0}^n (x + x_j) = (-1)^{n+1} \omega_{n+1}(x)$$Since $n$ is even, $n+1$ is odd, making $\omega_{n+1}(x)$ an odd function. Therefore, its absolute value $|\omega_{n+1}(x)|$ is an even function
+$$|\omega_{n+1}(-x)| = |-\omega_{n+1}(x)| = |\omega_{n+1}(x)|.$$
+%This symmetry allows us to focus only on the interval $[0, 1]$.\\
+Let $x \in (0, x_{n-1})$ such that $x$ is not a node. We examine the ratio of the polynomial evaluated at $x+h$ versus $x$ $$\left| \frac{\omega_{n+1}(x+h)}{\omega_{n+1}(x)} \right| = \left| \frac{\prod_{j=0}^n (x + h - x_j)}{\prod_{j=0}^n (x - x_j)} \right|$$
+Since $x_j = x_{j-1} + h$, we can rewrite the terms in the numerator $$x + h - x_j = x - (x_j - h) = x - x_{j-1}$$
+Thus, the numerator is $$\omega_{n+1}(x+h) = (x+h-x_0)(x+h-x_1)\cdots(x+h-x_n) = (x+h-x_0)(x-x_0)(x-x_1)\cdots(x-x_{n-1})$$And the denominator is $$\omega_{n+1}(x) = (x-x_0)(x-x_1)\cdots(x-x_{n-1})(x-x_n)$$
+Canceling common terms $(x-x_0)\cdots(x-x_{n-1})$, we get $$\left| \frac{\omega_{n+1}(x+h)}{\omega_{n+1}(x)} \right| = \left| \frac{x+h-x_0}{x-x_n} \right|$$
+Since $x_0 = -1$ and $x_n = 1$, then$$\left| \frac{\omega_{n+1}(x+h)}{\omega_{n+1}(x)} \right| = \left| \frac{x+h+1}{x-1} \right| = \frac{x+h+1}{1-x}$$
+For any $x \in (0, x_{n-1})$, if $x+h+1 > 1-x$ $$x+h+1 > 1-x \implies 2x + h > 0$$Since $x > 0$ and $h > 0$, this inequality is always true. Therefore $$|\omega_{n+1}(x+h)| > |\omega_{n+1}(x)|.$$
+Since$|\omega_{n+1}(x+h)| > |\omega_{n+1}(x)|$, the magnitude of $|\omega_{n+1}(x)|$ increases monotonically away from the center. By symmetry, the maximum is attained in the outermost intervals $(x_0, x_1)$ and $(x_{n-1}, x_n)$.\\
+Thus $$ |\omega_{n+1}| \text{ is maximum if } x\in (x_{n−1}, x_n).$$
+~\\
+
+\newpage
+8. Determine an interpolating polynomial $Hf \in \mathbb{P}_n$ such that
+\begin{equation*}
+(Hf)^{(k)} (x_0) =f^{(k)} (x_0), ~k=0,\dots,n,
+\end{equation*}
+and check that
+\begin{equation*}
+(Hf)(x) = \sum_{j=0}^{n} \frac{f^{(j)}(x_0)}{j!}(x-x_0)^{j},
+\end{equation*}
+that is, the Hermite interpolating polynomial on one node coincides with the Taylor polynomial. \\
+~\\
+$\Rightarrow$
+Since $Hf$ is a polynomial of degree $n$ in $\mathbb{P}_n$, then $$(Hf)(x) = a_0 + a_1(x-x_0) + a_2(x-x_0)^2 + \dots + a_n(x-x_0)^n = \sum_{j=0}^{n} a_j (x-x_0)^j.$$Our goal is to determine the coefficients $a_j$ such that the interpolation conditions are satisfied.\\
+Given $(Hf)^{(k)}(x_0) = f^{(k)}(x_0)$ for $k = 0, \dots, n$. %Let's differentiate the polynomial term-by-term.
+The $k$-th derivative of a single term $(x-x_0)^j$ evaluated at $x = x_0$ is
+$\left\{
+\begin{array}{ccc}
+0 &if &j < k \\
+k! &if &j = k \\
+0 &if &j > k
+\end{array}
+\right.$\\
+Therefore, when we evaluate the $k$-th derivative of the whole sum at $x_0$, all terms vanish except for the term where $j=k$ $$(Hf)^{(k)}(x_0) = k! a_k$$Setting this equal to the required condition $f^{(k)}(x_0)$, we find $$k! a_k = f^{(k)}(x_0) \implies \mathbf{a_k = \frac{f^{(k)}(x_0)}{k!}}$$
+Substituting these coefficients $a_j$ back into $(Hf)(x)$ $$(Hf)(x) = \sum_{j=0}^{n} \frac{f^{(j)}(x_0)}{j!}(x-x_0)^{j}$$
+This expression is precisely the definition of the Taylor polynomial of degree $n$ for the function $f$ at the point $x_0$.\\
+~\\
+
+\newpage
+9. Given the following set of data
+\begin{equation*}
+\{ f_0 =f(-1)=1, f_1=f'(-1) =1, f_2=f'(1)=2, f_3=f'(2) =1 \},
+\end{equation*}
+prove that the Hermite-Birkoff interpolating polynomial $H_3$ does not exist for them.
+[Solution   letting $H_3(x) = a_3 x^3 + a_2 x^2 + a_1 x + a_0,$ one must check that the matrix of the linear system $H_3(x_i) = f_i$ for $i = 0, \dots , 3$ is singular.] \\
+~\\
+$\Rightarrow$ Let $H_3(x) \in \mathbb{P}_3$ and define $H_3(x) = a_3 x^3 + a_2 x^2 + a_1 x + a_0$.\\
+$$\Rightarrow H_3'(x) = 3a_3 x^2 + 2a_2 x + a_1$$
+Since we have $H_3(-1) = 1$, $H_3'(-1) = 1$, $H_3'(1) = 2$ and $H_3'(2) = 1$, then
+\begin{align*}
+H_3(-1) &= a_3(-1)^3 + a_2(-1)^2 + a_1(-1) + a_0 = 1 \implies -a_3 + a_2 - a_1 + a_0 = 1, \\
+H_3'(-1) &= 3a_3(-1)^2 + 2a_2(-1) + a_1 = 1 \implies 3a_3 - 2a_2 + a_1 = 1, \\
+H_3'(1) &= 3a_3(1)^2 + 2a_2(1) + a_1 = 2 \implies 3a_3 + 2a_2 + a_1 = 2, \\
+H_3'(2) &= 3a_3(2)^2 + 2a_2(2) + a_1 = 1 \implies 12a_3 + 4a_2 + a_1 = 1.
+\end{align*}
+~\\
+We can write this as a system $A \mathbf{a} = \mathbf{f}$, where $\mathbf{a} = [a_3, a_2, a_1, a_0]^T$ $$\begin{pmatrix}
+-1 & 1 & -1 & 1 \\
+3 & -2 & 1 & 0 \\
+3 & 2 & 1 & 0 \\
+12 & 4 & 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+a_3 \\ a_2 \\ a_1 \\ a_0
+\end{pmatrix} = 
+\begin{pmatrix}
+1 \\ 1 \\ 2 \\ 1
+\end{pmatrix}$$
+Expanding the determinant along the last column $$\det(A) = - (1) \cdot \det \begin{pmatrix} 3 & -2 & 1 \\ 3 & 2 & 1 \\ 12 & 4 & 1 \end{pmatrix}$$
+\begin{align*}
+\Rightarrow \det \begin{pmatrix} 3 & -2 & 1 \\ 3 & 2 & 1 \\ 12 & 4 & 1 \end{pmatrix} &= 3(2 \cdot 1 - 4 \cdot 1) - (-2)(3 \cdot 1 - 12 \cdot 1) + 1(3 \cdot 4 - 12 \cdot 2)\\
+ &= 3(-2) + 2(-9) + 1(-12) = -6 - 18 - 12 = -36
+\end{align*}
+Therefore, $\det(A) = -(-36) = 36$.\\
+Since $\det(A) \neq 0$, the system is non-singular, and for the data provided ($f(-1), f'(-1), f'(1), f'(2)$), the polynomial $H_3$.\\
+Thus the Hermite-Birkoff interpolating polynomial $H_3$ does not exist for them.\\
+~\\
+
+\newpage
+12. Let $f(x) = cos(x) = 1- \frac{x^2}{2!}+\frac{x^4}{4!}-\frac{x^6}{6!}+\dots;$ then, consider the following rational approximation
+\begin{equation*}
+r(x) =\frac{a_0+a_2 x^2 +a_4 x^4}{1+b_0 x^2} ,
+\end{equation*}
+called the Pad$\acute{e}$ approximation. Determine the coefficients of r in such a way that
+\begin{equation*}
+f(x) - r(x) = \gamma_8 x^8 +\gamma_{10} x^{10}+\dots
+\end{equation*}
+[Solution  $a_0 = 1, a_2 = −\frac{7}{15}, a_4 = \frac{1}{40}, b_2 = \frac{1}{30}$.]\\ 
+~\\
+$\Rightarrow$ The condition $f(x) - r(x) = O(x^8)$ implies that the first 7 terms of the Taylor series of $f(x)$ and $r(x)$ must be identical. Therefore we have $$f(x) \approx \frac{a_0 + a_2 x^2 + a_4 x^4}{1 + b_2 x^2}$$
+Multiplying both sides by the denominator, we get the condition for the coefficients $$f(x)(1 + b_2 x^2) - (a_0 + a_2 x^2 + a_4 x^4) = O(x^8)$$
+Since the Taylor expansion for $\cos(x)$ centered at $0$ $$f(x) = 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - \frac{x^6}{6!} + O(x^8) = 1 - \frac{x^2}{2} + \frac{x^4}{24} - \frac{x^6}{720} + O(x^8)$$
+Multiply this by $(1 + b_2 x^2)$ $$\left(1 - \frac{x^2}{2} + \frac{x^4}{24} - \frac{x^6}{720}\right)(1 + b_2 x^2) = a_0 + a_2 x^2 + a_4 x^4 + 0x^6 + O(x^8)$$
+We can find the terms
+$$\left\{
+\begin{array}{ccc}
+\text{constant} &\rightarrow& 1 \\
+x^2 &\rightarrow& b_2 - \frac{1}{2} \\
+x^4 &\rightarrow& -\frac{b_2}{2} + \frac{1}{24} \\
+x^6 &\rightarrow& \frac{b_2}{24} - \frac{1}{720}\\
+\end{array}
+\right.$$
+%We equate the coefficients of like powers of $x$ on both sides.\\
+For $x^6$ Since there is no $x^6$ term in the numerator $P(x) = a_0 + a_2 x^2 + a_4 x^4$, the coefficient of $x^6$ in the expansion must be zero 
+$$\frac{b_2}{24} - \frac{1}{720} = 0 \implies \frac{b_2}{24} = \frac{1}{720} \implies b_2 = \frac{24}{720} = \frac{1}{30}$$
+For $x^0$： $$a_0 =1$$
+For $x^2$： $$a_2 = b_2 - \frac{1}{2} = \frac{1}{30} - \frac{15}{30} = -\frac{7}{15}$$
+For $x^4$： $$a_4 = \frac{1}{24} - \frac{b_2}{2} = \frac{1}{24} - \frac{1}{2}\left(\frac{1}{30}\right) = \frac{1}{24} - \frac{1}{60}$$
+Thus the coefficients for the Padé approximation $$r(x) = \frac{1 - \frac{7}{15}x^2 + \frac{1}{40}x^4}{1 + \frac{1}{30}x^2}$$ are $a_0 = 1, ~a_2 = −\frac{7}{15}, ~a_4 = \frac{1}{40},\text{~and~}  b_2 = \frac{1}{30}$.\\
+~\\
+
+\newpage
+Chapter9\\
+~\\
+1. Let $E_0 (f)$ and $E_1(f)$ be the quadrature errors in (9.6) and (9.12). Prove that $|E_1 (f)|  \cong 2|E_0 (f)|$.
+\begin{equation*}
+E_0 (f) =\frac{h^3}{3!} f''(\xi), h=\frac{b-a}{2} \tag{9.6}
+\end{equation*}
+\begin{equation*}
+E_1(f) =-\frac{h^3}{12}f''(\xi) ,h = b − a, \tag{9.12}
+\end{equation*} \\
+~\\
+$\Rightarrow$ Consider the interval $[a, b]$. Let $x_M = \frac{a+b}{2}$ be the midpoint and $L = b-a$ be the total length.\\
+By the Midpoint Rule($I_M$) and thee Trapezoidal Rule ($I_T$), we have
+$$I_M = L \cdot f(x_M)$$ and $$I_T = \frac{L}{2} [f(a) + f(b)]$$
+To find the errors, we expand $f(x)$ in a Taylor series about the midpoint $x_M$. 
+Let $x = x_M + \delta$,then $$f(x_M + \delta) = f(x_M) + \delta f'(x_M) + \frac{\delta^2}{2} f''(x_M) + \frac{\delta^3}{6} f'''(x_M) + O(\delta^4)$$
+The exact integral $I$ is $$I = \int_{a}^{b} f(x) \, dx = \int_{-L/2}^{L/2} f(x_M + \delta) \, d\delta$$Integrating the Taylor series $$I = \left[ \delta f(x_M) + \frac{\delta^2}{2} f'(x_M) + \frac{\delta^3}{6} f''(x_M) + \dots \right]_{-L/2}^{L/2}$$
+Since the odd powers of $\delta$ cancel out over the symmetric interval $$I = L f(x_M) + \frac{L^3}{24} f''(x_M) + O(L^5)$$
+For the Midpoint Rule ($E_0$)： $$E_0 = I - I_M = \left( L f(x_M) + \frac{L^3}{24} f''(x_M) \right) - L f(x_M)$$$$E_0 \approx \frac{L^3}{24} f''(x_M)$$
+For the Trapezoidal Rule ($E_1$)： First, evaluate $f(a)$ and $f(b)$ using the Taylor series at $\delta = -L/2$ and $\delta = L/2$ 
+$$f(a) + f(b) = \left( f(x_M) - \frac{L}{2} f' + \frac{L^2}{8} f'' \right) + \left( f(x_M) + \frac{L}{2} f' + \frac{L^2}{8} f'' \right) = 2 f(x_M) + \frac{L^2}{4} f''(x_M)$$
+$$I_T = \frac{L}{2} [2 f(x_M) + \frac{L^2}{4} f''(x_M)] = L f(x_M) + \frac{L^3}{8} f''(x_M)$$
+$$\Rightarrow E_1 = I - I_T = \left( L f(x_M) + \frac{L^3}{24} f'' \right) - \left( L f(x_M) + \frac{L^3}{8} f'' \right)$$
+$$\rightarrow E_1 \approx \left( \frac{1}{24} - \frac{3}{24} \right) L^3 f'' = -\frac{L^3}{12} f''(x_M)$$
+Comparing the absolute values of the error terms $$|E_1| = \frac{L^3}{12} |f''| \text{~and~}|E_0| = \frac{L^3}{24} |f''|$$
+Dividing the two $$\frac{|E_1|}{|E_0|} = \frac{1/12}{1/24} = 2$$Thus, $|E_1| \cong 2|E_0|$.\\
+~\\
+
+\newpage
+3. Let $I_n(f) = \sum_{k=0}^{n} \alpha_k f(x_k)$ be a Lagrange quadrature formula on $n+1$ nodes.
+Compute the degree of exactness r of the formulae：
+\begin{enumerate}[(a)]
+    \item $I_2 (f) = (2/3)[2f(−1/2) − f(0) + 2f(1/2)],$
+    \item $I_4 (f) =(1/4)[f(−1) + 3f(−1/3) + 3f(1/3) + f(1)].$
+\end{enumerate}
+Which is the order of infinitesimal $p$ for (a) and (b)?
+[Solution  $r = 3$ and $p = 5$ for both $I_2 (f$) and $I_4(f)$.] \\
+~\\
+$\Rightarrow$ (a) $I_2 (f) = \frac{2}{3}[2f(-1/2) - f(0) + 2f(1/2)]$\\
+~\\
+Since $$I_2 (f) = \frac{2}{3} [ 2f(-\frac{1}{2}) - f(0) + 2f(\frac{1}{2})] = \frac{4}{3}f(-\frac{1}{2}) -\frac{2}{3} f(0) + \frac{4}{3}f(\frac{1}{2}),$$ then
+we have $x_0 = -\frac{1}{2}, x_1 = 0, x_2 = \frac{1}{2}$ with weights $\alpha_0 = \frac{4}{3}, \alpha_1 = -\frac{2}{3}, \alpha_2 = \frac{4}{3}$.\\
+~\\
+If $k=0$： $$\left\{
+\begin{array}{ccl}
+\int_{-1}^1 1 dx &=& 2 \\[5pt]
+I_2(1) &=& \frac{2}{3}[2(1) - 1 + 2(1)] = \frac{2}{3}(3) = 2 \\
+\end{array}
+\right.$$
+~\\
+If $k=1$： $$\left\{
+\begin{array}{ccl}
+\int_{-1}^1 x dx &=& 0 \\[5pt]
+I_2(x) &=& \frac{2}{3}[2(-1/2) - 0 + 2(1/2)] = 0 \\
+\end{array}
+\right.$$
+~\\
+If $k=2$： $$\left\{
+\begin{array}{ccl}
+\int_{-1}^1 x^2 dx &=& \left[ \frac{x^3}{3} \right]_{-1}^1 = \frac{2}{3} \\[5pt]
+I_2(x^2) &=& \frac{2}{3}[2(-1/2)^2 - 0 + 2(1/2)^2] = \frac{2}{3}[\frac{2}{4} + \frac{2}{4}] = \frac{2}{3} \\
+\end{array}
+\right.$$
+~\\
+If $k=3$： $$\left\{
+\begin{array}{ccl}
+\int_{-1}^1 x^3 dx &=& 0 \\[5pt]
+I_2(x^3) &=& \frac{2}{3}[2(-1/8) - 0 + 2(1/8)] = 0\\
+\end{array}
+\right.$$
+~\\
+If $k=4$： $$\left\{
+\begin{array}{ccl}
+\int_{-1}^1 x^4 dx &=& \frac{2}{5} = 0.4 \\[5pt]
+I_2(x^4) &=& \frac{2}{3}[2(1/16) - 0 + 2(1/16)] = \frac{2}{3}(\frac{1}{4}) = \frac{1}{6} \approx 0.166\\
+\end{array}
+\right.$$
+Thus the degree of exactness is $r = 3$.\\
+
+(b) $I_4 (f) = \frac{1}{4}[f(-1) + 3f(-1/3) + 3f(1/3) + f(1)]$\\
+~\\
+Since $$I_4 (f) = \frac{1}{4}[f(-1) + 3f(-\frac{1}{3}) + 3f(\frac{1}{3}) + f(1)] =\frac{1}{4}f(-1) + \frac{3}{4}f(-\frac{1}{3}) + \frac{3}{4}f(\frac{1}{3}) + \frac{1}{4}f(1) ,$$ 
+then we have $x_0 = -1, x_1 = -\frac{1}{3} , x_2 =\frac{1}{3} , x_3 =1$ with weights $\alpha_0 = \frac{1}{4}, \alpha_1 = \frac{3}{4}, \alpha_2 = \frac{3}{4}, \alpha_3 = \frac{1}{4}$.\\
+~\\
+If $k=0$： $$\left\{
+\begin{array}{ccl}
+\int_{-1}^1 1 dx &=& 2\\[5pt]
+I_4(1) &=& \frac{1}{4}[1 + 3 + 3 + 1] = \frac{8}{4} = 2 \\
+\end{array}
+\right.$$
+~\\
+If $k = 1$ or $3$： Due to the symmetry of the nodes and weights, the summation will be $0$, matching the integral.\\
+~\\
+If $k=2$： $$\left\{
+\begin{array}{ccl}
+\int_{-1}^1 x^2 dx &=& \frac{2}{3}\\[5pt]
+I_4(x^2) &=& \frac{1}{4}[(-1)^2 + 3(-1/3)^2 + 3(1/3)^2 + (1)^2] = \frac{1}{4}[1 + \frac{3}{9} + \frac{3}{9} + 1] = \frac{1}{4}[2 + \frac{2}{3}] = \frac{2}{3} \\
+\end{array}
+\right.$$
+~\\
+If $k=4$： $$\left\{
+\begin{array}{ccl}
+\int_{-1}^1 x^4 dx &=& 0.4\\[5pt]
+I_4(x^4) &=& \frac{1}{4}[1 + 3(1/81) + 3(1/81) + 1] = \frac{1}{4}[2 + \frac{2}{27}] = \frac{1}{4}(\frac{56}{27}) = \frac{14}{27} \approx 0.518\\
+\end{array}
+\right.$$
+Thus the degree of exactness is $r = 3$.\\
+~\\
+Since in both cases (a) and (b) we all have $r=3$ and the rules are symmetric, the leading order of the error is$$p = r + 2 = 5.$$
+\end{document}
